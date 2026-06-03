@@ -94,6 +94,6 @@ polars-vs-pandas-pipeline/
 
 | Kişi | Rol | Ana sorumluluk |
 |---|---|---|
-| Zühre | Polars Developer | Veri üretimi + Polars pipeline |
+| Zühre | Polars Developer | Veri üretimi + Polars pipeline  |
 | Dilara | Pandas Analyst | Pandas kıyas + karşılaştırma yazısı |
 | Fatih | Koordinatör | Dokümantasyon + test + sunum |
