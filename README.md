@@ -47,9 +47,9 @@ Sıfırdan üretmek isterseniz 1. notebook'u önce çalıştırın (deterministi
 
 | Sıra | Notebook | Ne yapar | Sahip |
 |---|---|---|---|
-| 1 | [`polars_pipeline.ipynb`](polars_pipeline.ipynb) | Sentetik veriyi üretir (`data/ucus_verisi.csv`) + Polars lazy pipeline | Zühre |
-| 2 | [`pandas_karsilastirma.ipynb`](pandas_karsilastirma.ipynb) | Aynı sorguyu pandas ile yazar, süre/bellek + ölçekleme kıyası | Dilara |
-| 3 | [`test_dogrulama.ipynb`](test_dogrulama.ipynb) | Eşdeğerlik + edge-case + zaman doğrulaması, görseller | Fatih |
+| 1 | [`notebooks/polars_pipeline.ipynb`](notebooks/polars_pipeline.ipynb) | Sentetik veriyi üretir (`data/ucus_verisi.csv`) + Polars lazy pipeline | Zühre |
+| 2 | [`notebooks/pandas_karsilastirma.ipynb`](notebooks/pandas_karsilastirma.ipynb) | Aynı sorguyu pandas ile yazar, süre/bellek + ölçekleme kıyası | Dilara |
+| 3 | [`notebooks/test_dogrulama.ipynb`](notebooks/test_dogrulama.ipynb) | Eşdeğerlik + edge-case + zaman doğrulaması, görseller | Fatih |
 
 Her notebook için **Kernel → Restart & Run All**. Çalışma dizini depo kökü olmalı
 (göreli yol `data/ucus_verisi.csv` çözülsün).
@@ -70,18 +70,19 @@ python -m pytest -q          # 9 test — kanonik sorgu eşdeğerlik + edge-case
 ```
 polars-vs-pandas-pipeline/
 ├── data/
-│   └── ucus_verisi.csv          # 150.000 satırlık sentetik uçuş verisi (8 sütun)
-├── polars_pipeline.ipynb        # [1] Veri üretimi + Polars lazy pipeline
-├── pandas_karsilastirma.ipynb   # [2] Pandas kıyas + ölçekleme/benchmark
-├── test_dogrulama.ipynb         # [3] Eşdeğerlik + edge-case + zaman doğrulaması
-├── kanonik.py                   # Kanonik sorgu + eşdeğerlik/zaman yardımcıları (tek kaynak)
-├── tests/
-│   └── test_kanonik.py          # pytest birim testleri (9 test)
+│   └── ucus_verisi.csv              # 150.000 satırlık sentetik uçuş verisi (8 sütun)
+├── notebooks/
+│   ├── polars_pipeline.ipynb        # [1] Veri üretimi + Polars lazy pipeline
+│   ├── pandas_karsilastirma.ipynb   # [2] Pandas kıyas + ölçekleme/benchmark
+│   └── test_dogrulama.ipynb         # [3] Eşdeğerlik + edge-case + zaman doğrulaması
 ├── docs/
-│   ├── karsilastirma_sonuclari.md  # Pandas vs Polars karşılaştırma yazısı
-│   ├── test_raporu.md              # Test & doğrulama raporu
-│   └── paylasim_metni.txt          # Challenge teslim notu
-├── requirements.txt             # Sabitlenmiş bağımlılıklar
+│   ├── karsilastirma_sonuclari.md   # Pandas vs Polars karşılaştırma yazısı
+│   ├── test_raporu.md               # Test & doğrulama raporu
+│   └── paylasim_metni.txt           # Challenge teslim notu
+├── tests/
+│   └── test_kanonik.py              # pytest birim testleri (9 test)
+├── kanonik.py                       # Kanonik sorgu + eşdeğerlik/zaman yardımcıları (tek kaynak)
+├── requirements.txt                 # Sabitlenmiş bağımlılıklar
 ├── LICENSE
 └── README.md
 ```
