@@ -113,3 +113,17 @@ def esdeger_mi(pl_df, pd_df, rtol: float = 1e-9, atol: float = 1e-6) -> dict:
     # "gecti" = tüm bool kontrollerin AND'i (float_hata str olduğundan bool filtreleniyor).
     detaylar["gecti"] = all(v for v in detaylar.values() if isinstance(v, bool))
     return {"gecti": detaylar["gecti"], "detaylar": detaylar}
+
+
+def sure_olc(fn, path: str = VERI_YOLU, tekrar: int = 5) -> float:
+    """fn(path)'i `tekrar` kez koşup ortalama saniyeyi döndür.
+
+    Tek-seferlik ölçüm gürültülüdür (önbellek, OS zamanlaması); N tekrar ortalaması
+    daha güvenilir bir benchmark verir.
+    """
+    sureler = []
+    for _ in range(tekrar):
+        t0 = time.perf_counter()
+        fn(path)
+        sureler.append(time.perf_counter() - t0)
+    return sum(sureler) / len(sureler)

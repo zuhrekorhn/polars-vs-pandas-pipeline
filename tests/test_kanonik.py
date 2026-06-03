@@ -5,6 +5,7 @@ from kanonik import (
     pandas_kanonik,
     normalize,
     esdeger_mi,
+    sure_olc,
     SONUC_SUTUNLAR,
     VERI_YOLU,
 )
@@ -76,3 +77,8 @@ def test_edge_tek_satir(tmp_path):
     assert esdeger_mi(pl_df, pd_df)["gecti"] is True
     assert pd_df.loc[0, "ucus_adedi"] == 1
     assert pd_df.loc[0, "toplam_gelir"] == 1000.0
+
+
+def test_sure_olc_pozitif_ortalama():
+    ort = sure_olc(pandas_kanonik, VERI_YOLU, tekrar=2)
+    assert isinstance(ort, float) and ort > 0
