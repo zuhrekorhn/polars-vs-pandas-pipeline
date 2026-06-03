@@ -11,9 +11,14 @@ BEKLENEN_MD5 = "a7a4ca24173b4f4b101c0ca70bf7a9d7"
 
 
 def polars_kanonik(path: str = VERI_YOLU) -> pl.DataFrame:
-    """Kanonik sorgu — Polars LAZY: filter → group_by → agg → sort → collect."""
+    """Kanonik sorgu — Polars LAZY: filter → group_by → agg → sort → collect.
+
+    schema_overrides: boş (yalnız başlık) CSV'de Polars sayısal sütunları str tahmin eder
+    ve .sum() patlar. Tipleri açıkça sabitlemek hem bu edge-case'i düzeltir hem de gerçek
+    veride aynı tipler olduğu için davranışı değiştirmez (şema çıkarımına güvenmemek iyi pratik).
+    """
     return (
-        pl.scan_csv(path)
+        pl.scan_csv(path, schema_overrides={"bilet_fiyati": pl.Float64, "gecikme_dk": pl.Int64})
         .filter(
             pl.col("kalkis_tarihi").str.starts_with("2024")
             & (pl.col("ucus_tipi") == "ic_hat")
@@ -57,7 +62,11 @@ def normalize(df: pd.DataFrame) -> pd.DataFrame:
     kozmetik nedenlerle başarısız olur.
     """
     out = df[SONUC_SUTUNLAR].sort_values(GROUP_KEYS).reset_index(drop=True).copy()
+    # dtype'ları kanonik forma getir: Polars u32 vs pandas int64, ve boş groupby-agg'de
+    # pandas float sütunu object üretebilir → assert_allclose patlar. float64'e sabitle.
     out["ucus_adedi"] = out["ucus_adedi"].astype("int64")
+    out["toplam_gelir"] = out["toplam_gelir"].astype("float64")
+    out["ort_gecikme_dk"] = out["ort_gecikme_dk"].astype("float64")
     return out
 
 

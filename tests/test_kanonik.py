@@ -43,3 +43,36 @@ def test_esdeger_mi_bozuk_cift_kalir():
     pd_df.loc[0, "toplam_gelir"] = pd_df.loc[0, "toplam_gelir"] + 1000.0  # kasıtlı bozma
     sonuc = esdeger_mi(pl_df, pd_df)
     assert sonuc["gecti"] is False
+
+
+def _gecici_csv(tmp_path, satirlar):
+    p = tmp_path / "mini.csv"
+    baslik = "ucus_no,kalkis_havaalani,varis_havaalani,havayolu,ucus_tipi,kalkis_tarihi,bilet_fiyati,gecikme_dk"
+    p.write_text("\n".join([baslik] + satirlar) + "\n")
+    return str(p)
+
+
+def test_edge_bos_dataframe(tmp_path):
+    path = _gecici_csv(tmp_path, [])  # yalnız başlık
+    pl_df = polars_kanonik(path)
+    pd_df = pandas_kanonik(path)
+    assert pl_df.shape[0] == 0 and pd_df.shape[0] == 0
+    assert esdeger_mi(pl_df, pd_df)["gecti"] is True
+
+
+def test_edge_null_filtre_disi(tmp_path):
+    # ucus_tipi boş (null) tek satır → filtre eler → boş sonuç, iki motor da aynı
+    path = _gecici_csv(tmp_path, ["F1,IST,ESB,THY,,2024-05-01,1000.0,10"])
+    pl_df = polars_kanonik(path)
+    pd_df = pandas_kanonik(path)
+    assert pl_df.shape[0] == 0 and pd_df.shape[0] == 0
+
+
+def test_edge_tek_satir(tmp_path):
+    path = _gecici_csv(tmp_path, ["F1,IST,ESB,THY,ic_hat,2024-05-01,1000.0,10"])
+    pl_df = polars_kanonik(path)
+    pd_df = pandas_kanonik(path)
+    assert pl_df.shape == (1, 5) and pd_df.shape == (1, 5)
+    assert esdeger_mi(pl_df, pd_df)["gecti"] is True
+    assert pd_df.loc[0, "ucus_adedi"] == 1
+    assert pd_df.loc[0, "toplam_gelir"] == 1000.0
