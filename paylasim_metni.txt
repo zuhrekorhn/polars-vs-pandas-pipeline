@@ -1,0 +1,46 @@
+🚀 Polars vs Pandas Pipeline — Challenge Teslimi
+
+Selam ekip! "Büyükçe tablo: filtre-grup-sum + pandas kıyas" challenge'ını tamamladık.
+
+📊 Ne yaptık?
+~150.000 satırlık sentetik uçuş verisi ürettik ve tek bir kanonik sorguyu (2024 iç hat
+uçuşları → havaalanı+havayolu bazında toplam gelir / ortalama gecikme / uçuş adedi) hem
+Polars'ın lazy motoruyla hem pandas ile yazdık. Sonuçların birebir aynı olduğunu testlerle
+kanıtladık ve süre/bellek karşılaştırdık.
+
+✅ Sonuçlar:
+• Eşdeğerlik: Polars == pandas (şekil, sütun, değer) → PASS, 9/9 birim test geçti
+• Hız: 150K satırda Polars pandas'tan ~9× hızlı, ~yarı bellek
+• Ölçekleme: avantaj veri büyüdükçe artıyor (10K → 2.3×, 50K → 6.8×, 100K → 9.8×)
+
+🧠 Ne zaman Polars mantıklı?
+Büyük veri + lazy evaluation + paralellik + tekrarlı ETL işlerinde Polars net üstün.
+Küçük veri, zengin ekosistem (scikit-learn/matplotlib) ve öğrenme kolaylığı gerektiğinde
+pandas hâlâ pratik. Özet: büyük veri/ETL → Polars; küçük veri/hızlı keşif → pandas.
+
+🔗 Repo: https://github.com/zuhrekorhn/polars-vs-pandas-pipeline
+   (Notebook'lar: polars_pipeline → pandas_karsilastirma → test_dogrulama;
+    detay: README.md, test_raporu.md, karsilastirma_sonuclari.md)
+
+──────────────────────────────────────────────
+📌 Ders Çıkarımı (ekibin öğrendikleri)
+
+1. Aynı sorgu, iki motor → eşdeğerlik testi şart: Başta iki notebook farklı sorgular
+   çalıştırıyordu; "aynı sonuç" iddiası ancak tek kanonik sorgu + otomatik test ile
+   anlamlı hale geldi. Entegrasyon koordinasyonu, tek tek parçaları doğru yapmaktan
+   daha kritik.
+
+2. Polars lazy (scan_csv) gerçekten ölçekleniyor: Gereksiz satır/sütunları daha okumadan
+   eleyen lazy motor sayesinde pandas'a göre fark veri büyüdükçe açılıyor — küçük veride
+   neredeyse eşit, büyük veride kat kat.
+
+3. Benchmark dürüstlüğü: İki tarafın "aynı şeyi" ölçtüğünden emin olmak gerekiyor. İlk
+   ölçümümüz pandas'ı CSV okuma hariç, Polars'ı dahil ölçüp yanıltıcı sonuç vermişti;
+   simetrik (ikisi de I/O dahil) ölçünce gerçek tablo çıktı.
+
+4. Edge-case'ler bug yakalatır: Boş/null/tek-satır testleri, Polars'ın boş-girdide sayısal
+   sütunları string tahmin etmesi gibi ince hataları ortaya çıkardı (schema_overrides ile
+   çözüldü). Polars sayaçları u32, pandas int64 → karşılaştırmadan önce tip hizalama şart.
+
+5. Tekrarlanabilirlik: Sabit seed (42) + sabitlenmiş sürümler + MD5 ile girdi sabitleme,
+   sonuçların herkeste aynı çıkmasını sağladı.
