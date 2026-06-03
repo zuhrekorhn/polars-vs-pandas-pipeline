@@ -63,7 +63,7 @@ python -m pytest -q          # 9 test — kanonik sorgu eşdeğerlik + edge-case
 
 - **Eşdeğerlik:** Polars ve pandas sonuçları birebir eşdeğer (şekil/sütun/grup/int-tam/float-toleranslı) — **PASS ✅**
 - **Performans:** 150K satırda Polars pandas'tan ~9× hızlı; ölçeklemede avantaj veri büyüdükçe artıyor (10K→2.3×, 100K→9.8×).
-- Ayrıntı: [`test_raporu.md`](test_raporu.md) ve [`karsilastirma_sonuclari.md`](karsilastirma_sonuclari.md).
+- Ayrıntı: [`test_raporu.md`](docs/test_raporu.md) ve [`karsilastirma_sonuclari.md`](docs/karsilastirma_sonuclari.md).
 
 ## Proje Yapısı
 
@@ -77,10 +77,11 @@ polars-vs-pandas-pipeline/
 ├── kanonik.py                   # Kanonik sorgu + eşdeğerlik/zaman yardımcıları (tek kaynak)
 ├── tests/
 │   └── test_kanonik.py          # pytest birim testleri (9 test)
-├── test_raporu.md               # Test & doğrulama raporu
-├── karsilastirma_sonuclari.md   # Pandas vs Polars karşılaştırma yazısı
+├── docs/
+│   ├── karsilastirma_sonuclari.md  # Pandas vs Polars karşılaştırma yazısı
+│   ├── test_raporu.md              # Test & doğrulama raporu
+│   └── paylasim_metni.txt          # Challenge teslim notu
 ├── requirements.txt             # Sabitlenmiş bağımlılıklar
-├── docs/superpowers/            # Tasarım spec'i + implementasyon planı (süreç dokümanı)
 ├── LICENSE
 └── README.md
 ```
